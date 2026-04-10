@@ -9,6 +9,22 @@ function parseIngredients(rawValue: string): string[] {
   return [...new Set(rawValue.split(",").map((value) => value.trim().toLowerCase()).filter(Boolean))];
 }
 
+function getBannerCopy(result: RecommendationResponse): string {
+  if (result.summary) {
+    return result.summary;
+  }
+
+  if (result.hasStrongMatches) {
+    return "These are the strongest deterministic matches from the processed dataset.";
+  }
+
+  if (result.recipes.length > 0) {
+    return "These are lower-confidence ideas based on partial overlap. Adding one or two missing ingredients should improve the match quality.";
+  }
+
+  return "No close matches were found yet. Try adding 2 to 3 more specific ingredients to unlock better recommendations.";
+}
+
 export default function HomePage() {
   const [ingredients, setIngredients] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -141,11 +157,12 @@ export default function HomePage() {
             <strong>
               {result.hasStrongMatches
                 ? "Strong matches found"
-                : "No strong matches yet"}
+                : result.recipes.length > 0
+                  ? "No strong matches yet"
+                  : "No close matches found"}
             </strong>
             <p style={{ margin: "8px 0 0", color: "var(--muted)" }}>
-              {result.summary ??
-                "Deterministic recommendations are shown below. Add an LLM API key later to enable the grounded summary layer."}
+              {getBannerCopy(result)}
             </p>
             {!result.hasStrongMatches && result.suggestedIngredientsToAdd.length > 0 ? (
               <p style={{ margin: "10px 0 0" }}>
@@ -154,41 +171,67 @@ export default function HomePage() {
             ) : null}
           </div>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-              gap: 18
-            }}
-          >
-            {result.recipes.map((recipe) => (
-              <article
-                key={recipe.id}
-                style={{
-                  background: "var(--panel)",
-                  border: "1px solid var(--border)",
-                  borderRadius: "24px",
-                  padding: "20px",
-                  boxShadow: "var(--shadow)"
-                }}
-              >
-                <h2 style={{ marginTop: 0 }}>{recipe.title}</h2>
-                <p style={{ marginBottom: 10 }}>
-                  <strong>Score:</strong> {recipe.score}
-                </p>
-                <p style={{ margin: "0 0 10px" }}>{recipe.reason}</p>
-                <p style={{ margin: "0 0 10px" }}>
-                  <strong>Matched:</strong> {recipe.matchedIngredients.join(", ") || "None"}
-                </p>
-                <p style={{ margin: 0 }}>
-                  <strong>Missing:</strong> {recipe.missingIngredients.join(", ") || "None"}
-                </p>
-              </article>
-            ))}
-          </div>
+          {result.recipes.length > 0 ? (
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+                gap: 18
+              }}
+            >
+              {result.recipes.map((recipe) => (
+                <article
+                  key={recipe.id}
+                  style={{
+                    background: "var(--panel)",
+                    border: "1px solid var(--border)",
+                    borderRadius: "24px",
+                    padding: "20px",
+                    boxShadow: "var(--shadow)"
+                  }}
+                >
+                  <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
+                    <h2 style={{ marginTop: 0, marginBottom: 12 }}>{recipe.title}</h2>
+                    <span
+                      style={{
+                        background: result.hasStrongMatches ? "#d9ecdc" : "#f6dfc1",
+                        color: result.hasStrongMatches ? "var(--success)" : "var(--warning)",
+                        borderRadius: "999px",
+                        padding: "6px 10px",
+                        fontSize: "0.85rem",
+                        whiteSpace: "nowrap"
+                      }}
+                    >
+                      {result.hasStrongMatches ? "Strong match" : "Partial match"}
+                    </span>
+                  </div>
+                  <p style={{ marginBottom: 10 }}>
+                    <strong>Score:</strong> {recipe.score}
+                  </p>
+                  <p style={{ margin: "0 0 10px" }}>{recipe.reason}</p>
+                  <p style={{ margin: "0 0 10px" }}>
+                    <strong>Matched:</strong> {recipe.matchedIngredients.join(", ") || "None"}
+                  </p>
+                  <p style={{ margin: 0 }}>
+                    <strong>Missing:</strong> {recipe.missingIngredients.join(", ") || "None"}
+                  </p>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div
+              style={{
+                background: "var(--panel)",
+                border: "1px dashed var(--border)",
+                borderRadius: "24px",
+                padding: "22px 20px"
+              }}
+            >
+              Add a few more ingredients like a protein, a base, or an aromatic to unlock better recipe matches.
+            </div>
+          )}
         </section>
       ) : null}
     </main>
   );
 }
-

@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { recommendRecipes } from "../src/lib/recommender";
 import { normalizeIngredients } from "../src/lib/recommender/normalize-ingredients";
 import { rankRecipes } from "../src/lib/recommender/rank-recipes";
 import { suggestIngredientsToAdd } from "../src/lib/recommender/suggest-ingredients-to-add";
@@ -69,4 +70,39 @@ test("rankRecipes benefits from canonical ingredient aliases", () => {
 test("suggestIngredientsToAdd surfaces common missing items", () => {
   const ranked = rankRecipes(fixtureRecipes, ["egg"]);
   assert.deepEqual(suggestIngredientsToAdd(ranked, 2).length, 2);
+});
+
+test("recommendRecipes returns up to five strong matches when thresholds are met", () => {
+  const result = recommendRecipes(
+    [
+      ...fixtureRecipes,
+      {
+        id: "3",
+        title: "Tomato Egg Scramble",
+        ingredients: ["egg", "tomato", "onion"]
+      }
+    ],
+    ["egg", "tomato", "onion", "pasta", "garlic", "olive oil"]
+  );
+
+  assert.equal(result.hasStrongMatches, true);
+  assert.equal(result.recipes.length, 2);
+  assert.deepEqual(result.suggestedIngredientsToAdd, []);
+});
+
+test("recommendRecipes returns weaker candidates and ingredient suggestions when no strong match exists", () => {
+  const result = recommendRecipes(fixtureRecipes, ["egg", "onion"]);
+
+  assert.equal(result.hasStrongMatches, false);
+  assert.equal(result.recipes.length > 0, true);
+  assert.equal(result.recipes.length <= 3, true);
+  assert.equal(result.suggestedIngredientsToAdd.includes("rice"), true);
+});
+
+test("recommendRecipes avoids returning zero-match filler results", () => {
+  const result = recommendRecipes(fixtureRecipes, ["banana", "yogurt"]);
+
+  assert.equal(result.hasStrongMatches, false);
+  assert.deepEqual(result.recipes, []);
+  assert.deepEqual(result.suggestedIngredientsToAdd, []);
 });
