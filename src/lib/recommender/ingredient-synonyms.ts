@@ -4,6 +4,25 @@ export const ingredientSynonyms: Record<string, string> = {
   eggs: "egg",
   chickpeas: "chickpea",
   chillies: "chili",
-  chilies: "chili"
+  chilies: "chili",
+  "garbanzo bean": "chickpea",
+  "garbanzo beans": "chickpea",
+  scallion: "green onion",
+  scallions: "green onion",
+  "spring onion": "green onion",
+  "spring onions": "green onion",
+  capsicum: "bell pepper",
+  capsicums: "bell pepper",
+  spaghetti: "pasta",
+  penne: "pasta",
+  fusilli: "pasta",
+  macaroni: "pasta",
+  "extra virgin olive oil": "olive oil",
+  "virgin olive oil": "olive oil",
+  "roma tomato": "tomato",
+  "roma tomatoes": "tomato",
+  "cherry tomato": "tomato",
+  "cherry tomatoes": "tomato",
+  "chicken thighs": "chicken thigh",
+  "chicken breasts": "chicken breast"
 };
-

@@ -28,11 +28,53 @@ const preparationWords = new Set([
   "diced",
   "minced",
   "sliced",
+  "crushed",
+  "grated",
+  "peeled",
+  "shredded",
   "fresh",
   "large",
   "small",
-  "medium"
+  "medium",
+  "ground"
 ]);
+
+const optionalLeadingWords = new Set([
+  "extra",
+  "virgin",
+  "boneless",
+  "skinless"
+]);
+
+function singularizeWords(value: string): string {
+  return value
+    .split(/\s+/)
+    .filter(Boolean)
+    .map(singularize)
+    .join(" ");
+}
+
+function canonicalizeIngredient(value: string): string {
+  const exactMatch = ingredientSynonyms[value];
+
+  if (exactMatch) {
+    return exactMatch;
+  }
+
+  const parts = value.split(/\s+/).filter(Boolean);
+  let firstMeaningfulIndex = 0;
+
+  while (
+    firstMeaningfulIndex < parts.length &&
+    optionalLeadingWords.has(parts[firstMeaningfulIndex] ?? "")
+  ) {
+    firstMeaningfulIndex += 1;
+  }
+
+  const strippedLeadingWords = parts.slice(firstMeaningfulIndex).join(" ");
+
+  return ingredientSynonyms[strippedLeadingWords] ?? strippedLeadingWords;
+}
 
 function singularize(value: string): string {
   if (value.endsWith("ies")) {
@@ -66,9 +108,10 @@ function stripNoise(value: string): string {
 
 export function normalizeIngredient(value: string): string {
   const cleaned = stripNoise(value);
-  const canonical = ingredientSynonyms[cleaned] ?? cleaned;
+  const singular = singularizeWords(cleaned);
+  const canonical = canonicalizeIngredient(singular);
 
-  return singularize(canonical).trim();
+  return singularizeWords(canonical).trim();
 }
 
 export function normalizeIngredients(values: string[]): string[] {
