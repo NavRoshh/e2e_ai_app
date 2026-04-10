@@ -1,4 +1,4 @@
-import { buildReason } from "./build-reason";
+import { buildExplanation, buildReason } from "./build-reason";
 import { scoreRecipe } from "./score-recipe";
 import type { RankedRecipe, Recipe } from "./types";
 
@@ -17,6 +17,7 @@ export function rankRecipes(
   return recipes
     .map((recipe) => {
       const scoreResult = scoreRecipe(recipe, userIngredients);
+      const explanation = buildExplanation(scoreResult);
 
       return {
         id: recipe.id,
@@ -24,9 +25,9 @@ export function rankRecipes(
         score: scoreResult.score,
         matchedIngredients: scoreResult.matchedIngredients,
         missingIngredients: scoreResult.missingIngredients,
-        reason: buildReason(scoreResult)
+        reason: buildReason(scoreResult),
+        explanation
       };
     })
     .sort(compareRank);
 }
-

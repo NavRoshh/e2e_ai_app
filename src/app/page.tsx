@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import type { RecommendationResponse } from "@/lib/recommender";
+import type { RankedRecipe, RecommendationResponse } from "@/lib/recommender";
 
 const initialState: RecommendationResponse | null = null;
 
@@ -23,6 +23,94 @@ function getBannerCopy(result: RecommendationResponse): string {
   }
 
   return "No close matches were found yet. Try adding 2 to 3 more specific ingredients to unlock better recommendations.";
+}
+
+function renderFactList(label: string, values: string[]): string {
+  return values.length > 0 ? values.join(", ") : label;
+}
+
+function RecipeCard({
+  recipe,
+  hasStrongMatches
+}: {
+  recipe: RankedRecipe;
+  hasStrongMatches: boolean;
+}) {
+  const chipBackground =
+    recipe.explanation.matchStrength === "strong" ? "#d9ecdc" : "#f6dfc1";
+  const chipColor =
+    recipe.explanation.matchStrength === "strong"
+      ? "var(--success)"
+      : "var(--warning)";
+
+  return (
+    <article
+      style={{
+        background: "var(--panel)",
+        border: "1px solid var(--border)",
+        borderRadius: "24px",
+        padding: "20px",
+        boxShadow: "var(--shadow)"
+      }}
+    >
+      <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
+        <h2 style={{ marginTop: 0, marginBottom: 12 }}>{recipe.title}</h2>
+        <span
+          style={{
+            background: chipBackground,
+            color: chipColor,
+            borderRadius: "999px",
+            padding: "6px 10px",
+            fontSize: "0.85rem",
+            whiteSpace: "nowrap"
+          }}
+        >
+          {hasStrongMatches ? "Strong match" : "Partial match"}
+        </span>
+      </div>
+
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 12 }}>
+        <span
+          style={{
+            borderRadius: "999px",
+            background: "#f4eadb",
+            padding: "6px 10px",
+            fontSize: "0.9rem"
+          }}
+        >
+          Score {recipe.score}
+        </span>
+        <span
+          style={{
+            borderRadius: "999px",
+            background: "#eef4ea",
+            padding: "6px 10px",
+            fontSize: "0.9rem"
+          }}
+        >
+          Coverage {recipe.explanation.coveragePercent}%
+        </span>
+        <span
+          style={{
+            borderRadius: "999px",
+            background: "#f5f1eb",
+            padding: "6px 10px",
+            fontSize: "0.9rem"
+          }}
+        >
+          {recipe.explanation.matchedCount} matched / {recipe.explanation.totalIngredients} total
+        </span>
+      </div>
+
+      <p style={{ margin: "0 0 12px" }}>{recipe.reason}</p>
+      <p style={{ margin: "0 0 10px" }}>
+        <strong>Matched:</strong> {renderFactList("None", recipe.matchedIngredients)}
+      </p>
+      <p style={{ margin: 0 }}>
+        <strong>Missing:</strong> {renderFactList("None", recipe.missingIngredients)}
+      </p>
+    </article>
+  );
 }
 
 export default function HomePage() {
@@ -180,42 +268,11 @@ export default function HomePage() {
               }}
             >
               {result.recipes.map((recipe) => (
-                <article
+                <RecipeCard
                   key={recipe.id}
-                  style={{
-                    background: "var(--panel)",
-                    border: "1px solid var(--border)",
-                    borderRadius: "24px",
-                    padding: "20px",
-                    boxShadow: "var(--shadow)"
-                  }}
-                >
-                  <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
-                    <h2 style={{ marginTop: 0, marginBottom: 12 }}>{recipe.title}</h2>
-                    <span
-                      style={{
-                        background: result.hasStrongMatches ? "#d9ecdc" : "#f6dfc1",
-                        color: result.hasStrongMatches ? "var(--success)" : "var(--warning)",
-                        borderRadius: "999px",
-                        padding: "6px 10px",
-                        fontSize: "0.85rem",
-                        whiteSpace: "nowrap"
-                      }}
-                    >
-                      {result.hasStrongMatches ? "Strong match" : "Partial match"}
-                    </span>
-                  </div>
-                  <p style={{ marginBottom: 10 }}>
-                    <strong>Score:</strong> {recipe.score}
-                  </p>
-                  <p style={{ margin: "0 0 10px" }}>{recipe.reason}</p>
-                  <p style={{ margin: "0 0 10px" }}>
-                    <strong>Matched:</strong> {recipe.matchedIngredients.join(", ") || "None"}
-                  </p>
-                  <p style={{ margin: 0 }}>
-                    <strong>Missing:</strong> {recipe.missingIngredients.join(", ") || "None"}
-                  </p>
-                </article>
+                  recipe={recipe}
+                  hasStrongMatches={result.hasStrongMatches}
+                />
               ))}
             </div>
           ) : (

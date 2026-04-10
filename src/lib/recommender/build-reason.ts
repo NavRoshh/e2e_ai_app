@@ -1,17 +1,33 @@
-import type { ScoreResult } from "./types";
+import type { RecipeExplanation, ScoreResult } from "./types";
 
-export function buildReason(result: ScoreResult): string {
+export function buildExplanation(result: ScoreResult): RecipeExplanation {
   const matchedCount = result.matchedIngredients.length;
-  const totalCount = matchedCount + result.missingIngredients.length;
+  const missingCount = result.missingIngredients.length;
+  const totalIngredients = matchedCount + missingCount;
+  const coveragePercent =
+    totalIngredients === 0
+      ? 0
+      : Math.round((matchedCount / totalIngredients) * 100);
 
-  if (result.missingIngredients.length === 0) {
-    return `Matches all ${totalCount} ingredients.`;
-  }
-
-  if (result.missingIngredients.length === 1) {
-    return `Matches ${matchedCount} of ${totalCount} ingredients and only misses ${result.missingIngredients[0]}.`;
-  }
-
-  return `Matches ${matchedCount} of ${totalCount} ingredients and misses ${result.missingIngredients.length} ingredients.`;
+  return {
+    matchedCount,
+    missingCount,
+    totalIngredients,
+    coveragePercent,
+    matchStrength: result.isStrongMatch ? "strong" : "partial"
+  };
 }
 
+export function buildReason(result: ScoreResult): string {
+  const explanation = buildExplanation(result);
+
+  if (explanation.missingCount === 0) {
+    return `Matches all ${explanation.totalIngredients} ingredients.`;
+  }
+
+  if (explanation.missingCount === 1) {
+    return `Matches ${explanation.matchedCount} of ${explanation.totalIngredients} ingredients and only misses ${result.missingIngredients[0]}.`;
+  }
+
+  return `Matches ${explanation.matchedCount} of ${explanation.totalIngredients} ingredients and misses ${explanation.missingCount} ingredients.`;
+}

@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { recommendRecipes } from "../src/lib/recommender";
+import { buildExplanation, buildReason } from "../src/lib/recommender/build-reason";
 import { normalizeIngredients } from "../src/lib/recommender/normalize-ingredients";
 import { rankRecipes } from "../src/lib/recommender/rank-recipes";
 import { suggestIngredientsToAdd } from "../src/lib/recommender/suggest-ingredients-to-add";
@@ -105,4 +106,44 @@ test("recommendRecipes avoids returning zero-match filler results", () => {
   assert.equal(result.hasStrongMatches, false);
   assert.deepEqual(result.recipes, []);
   assert.deepEqual(result.suggestedIngredientsToAdd, []);
+});
+
+test("buildExplanation returns structured deterministic explanation metadata", () => {
+  const explanation = buildExplanation({
+    score: 0.65,
+    matchedIngredients: ["tomato", "onion", "pasta"],
+    missingIngredients: ["garlic"],
+    isStrongMatch: true
+  });
+
+  assert.deepEqual(explanation, {
+    matchedCount: 3,
+    missingCount: 1,
+    totalIngredients: 4,
+    coveragePercent: 75,
+    matchStrength: "strong"
+  });
+});
+
+test("buildReason keeps deterministic explanation copy concise", () => {
+  const reason = buildReason({
+    score: 0.4,
+    matchedIngredients: ["egg", "onion"],
+    missingIngredients: ["rice", "soy sauce"],
+    isStrongMatch: false
+  });
+
+  assert.equal(reason, "Matches 2 of 4 ingredients and misses 2 ingredients.");
+});
+
+test("rankRecipes includes structured explanation data for cards", () => {
+  const ranked = rankRecipes(fixtureRecipes, ["tomato", "pasta", "onion"]);
+
+  assert.deepEqual(ranked[0]?.explanation, {
+    matchedCount: 3,
+    missingCount: 2,
+    totalIngredients: 5,
+    coveragePercent: 60,
+    matchStrength: "strong"
+  });
 });

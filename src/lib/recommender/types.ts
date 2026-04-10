@@ -14,6 +14,7 @@ export type RankedRecipe = {
   matchedIngredients: string[];
   missingIngredients: string[];
   reason: string;
+  explanation: RecipeExplanation;
 };
 
 export type RecommendationResponse = {
@@ -30,3 +31,10 @@ export type ScoreResult = {
   isStrongMatch: boolean;
 };
 
+export type RecipeExplanation = {
+  matchedCount: number;
+  missingCount: number;
+  totalIngredients: number;
+  coveragePercent: number;
+  matchStrength: "strong" | "partial";
+};
