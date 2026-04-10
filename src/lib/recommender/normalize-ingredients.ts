@@ -1,6 +1,7 @@
 import { ingredientSynonyms } from "./ingredient-synonyms";
 
 const measurementWords = new Set([
+  "g",
   "cup",
   "cups",
   "tbsp",
@@ -17,7 +18,20 @@ const measurementWords = new Set([
   "liters",
   "oz",
   "ounce",
-  "ounces"
+  "ounces",
+  "clove",
+  "cloves"
+]);
+
+const preparationWords = new Set([
+  "chopped",
+  "diced",
+  "minced",
+  "sliced",
+  "fresh",
+  "large",
+  "small",
+  "medium"
 ]);
 
 function singularize(value: string): string {
@@ -45,6 +59,7 @@ function stripNoise(value: string): string {
     .split(/\s+/)
     .filter(Boolean)
     .filter((part) => !measurementWords.has(part))
+    .filter((part) => !preparationWords.has(part))
     .join(" ")
     .trim();
 }
@@ -59,4 +74,3 @@ export function normalizeIngredient(value: string): string {
 export function normalizeIngredients(values: string[]): string[] {
   return [...new Set(values.map(normalizeIngredient).filter(Boolean))];
 }
-

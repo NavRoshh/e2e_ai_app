@@ -1,23 +1,66 @@
 [
   {
-    "id": "recipe-1",
+    "id": "raw-1",
     "title": "Garlic Tomato Pasta",
-    "ingredients": ["pasta", "tomato", "garlic", "olive oil", "onion"]
+    "ingredients": [
+      "pasta",
+      "tomato",
+      "onion",
+      "garlic",
+      "olive oil"
+    ],
+    "instructions": [
+      "Boil the pasta.",
+      "Cook onion and garlic in olive oil.",
+      "Add tomatoes and toss with pasta."
+    ],
+    "cuisine": "Italian",
+    "prepTime": 20
   },
   {
-    "id": "recipe-2",
+    "id": "raw-2",
     "title": "Simple Veggie Omelette",
-    "ingredients": ["egg", "onion", "tomato", "bell pepper", "olive oil"]
+    "ingredients": [
+      "egg",
+      "onion",
+      "tomato",
+      "bell pepper",
+      "olive oil"
+    ],
+    "instructions": [
+      "Beat the eggs",
+      "Cook the vegetables",
+      "Add eggs and fold."
+    ],
+    "cuisine": "Breakfast",
+    "prepTime": 15
   },
   {
-    "id": "recipe-3",
+    "id": "raw-3",
     "title": "Chicken Fried Rice",
-    "ingredients": ["rice", "chicken breast", "soy sauce", "egg", "onion"]
+    "ingredients": [
+      "rice",
+      "chicken breast",
+      "egg",
+      "onion",
+      "soy sauce"
+    ],
+    "instructions": [
+      "Cook the chicken.",
+      "Add rice, onion, and egg.",
+      "Finish with soy sauce."
+    ],
+    "prepTime": 25
   },
   {
-    "id": "recipe-4",
+    "id": "raw-4",
     "title": "Chickpea Salad Bowl",
-    "ingredients": ["chickpea", "cucumber", "tomato", "olive oil", "lemon juice"]
+    "ingredients": [
+      "chickpea",
+      "cucumber",
+      "tomato",
+      "olive oil",
+      "lemon juice"
+    ]
   }
 ]
-

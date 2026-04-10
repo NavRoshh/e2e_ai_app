@@ -10,12 +10,27 @@ This repository is scaffolded as an end-to-end AI application with five clear la
 
 ## Build Order
 
-1. Replace the sample processed dataset with your real cleaned dataset.
-2. Implement `scripts/etl.ts` to generate `data/processed/recipes.cleaned.json`.
+1. Replace the sample raw dataset in `data/raw/` with your real source dataset.
+2. Run `npm run etl` to generate `data/processed/recipes.cleaned.json` and the ETL reports.
 3. Expand `eval/manual-queries.json` to 10 to 20 realistic test queries.
 4. Tune normalization, ranking, thresholds, and fallback logic in `src/lib/recommender/`.
 5. Add a real provider integration in `src/lib/llm/generate-summary.ts`.
 6. Deploy to Vercel with `LLM_API_KEY` configured if you want live summaries.
+
+## ETL Workflow
+
+- Put a raw JSON dataset in `data/raw/`
+- Run `npm run etl`
+- Review:
+  - `data/processed/recipes.cleaned.json`
+  - `data/processed/etl-report.json`
+  - `data/processed/etl-report.md`
+
+The ETL script currently supports:
+- a root JSON array of recipe records
+- an object with a top-level `recipes` array
+- ingredient fields such as `ingredients`, `ingredientLines`, and `recipeIngredient`
+- title fields such as `title`, `name`, and `recipeName`
 
 ## Key Runtime Contract
 
@@ -29,8 +44,6 @@ This repository is scaffolded as an end-to-end AI application with five clear la
 
 ## Suggested Next Tasks
 
-- Implement ETL for your chosen dataset
-- Add stronger ingredient normalization rules
 - Add evaluation output reporting
 - Wire the LLM summary provider
 - Add styling polish and loading/error UX refinement

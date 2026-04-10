@@ -1,0 +1,9 @@
+{
+  "sourceFile": "data\\raw\\recipes.raw.sample.json",
+  "totalRawRecords": 7,
+  "validRecipes": 5,
+  "invalidRecords": 2,
+  "duplicatesRemoved": 1,
+  "outputRecords": 4,
+  "generatedAt": "2026-04-10T01:17:35.478Z"
+}

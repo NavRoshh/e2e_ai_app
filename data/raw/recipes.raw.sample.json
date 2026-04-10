@@ -1,0 +1,86 @@
+[
+  {
+    "id": "raw-1",
+    "title": "Garlic Tomato Pasta",
+    "ingredients": [
+      "200g pasta",
+      "2 chopped tomatoes",
+      "1 onion",
+      "2 cloves garlic",
+      "1 tbsp olive oil"
+    ],
+    "instructions": [
+      "Boil the pasta.",
+      "Cook onion and garlic in olive oil.",
+      "Add tomatoes and toss with pasta."
+    ],
+    "cuisine": "Italian",
+    "prepTime": 20
+  },
+  {
+    "id": "raw-2",
+    "name": "Simple Veggie Omelette",
+    "ingredientLines": [
+      "2 eggs",
+      "1 onion",
+      "1 tomato",
+      "1 bell pepper",
+      "1 tsp olive oil"
+    ],
+    "directions": "Beat the eggs. Cook the vegetables. Add eggs and fold.",
+    "category": "Breakfast",
+    "prep_time": "15"
+  },
+  {
+    "id": "raw-3",
+    "title": "Chicken Fried Rice",
+    "recipeIngredient": [
+      "2 cups rice",
+      "1 chicken breast",
+      "1 egg",
+      "1 onion",
+      "2 tbsp soy sauce"
+    ],
+    "steps": [
+      "Cook the chicken.",
+      "Add rice, onion, and egg.",
+      "Finish with soy sauce."
+    ],
+    "prepTime": 25
+  },
+  {
+    "id": "raw-4",
+    "title": "Chickpea Salad Bowl",
+    "ingredients": [
+      "1 cup chickpeas",
+      "1 cucumber",
+      "2 tomatoes",
+      "1 tbsp olive oil",
+      "1 tbsp lemon juice"
+    ]
+  },
+  {
+    "id": "raw-5",
+    "title": "Garlic Tomato Pasta",
+    "ingredients": [
+      "200 g pasta",
+      "2 tomatoes",
+      "1 onion",
+      "2 garlic cloves",
+      "1 tablespoon olive oil"
+    ]
+  },
+  {
+    "id": "raw-6",
+    "title": "",
+    "ingredients": [
+      "bread",
+      "butter"
+    ]
+  },
+  {
+    "id": "raw-7",
+    "title": "Incomplete Recipe",
+    "ingredients": []
+  }
+]

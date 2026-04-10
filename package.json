@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "test": "tsx --test tests/recommender.test.ts"
+    "test": "tsx --test tests/recommender.test.ts",
+    "etl": "tsx scripts/etl.ts",
+    "evaluate": "tsx scripts/evaluate.ts"
   },
   "dependencies": {
     "next": "15.2.0",
