@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import manualQueries from "../eval/manual-queries.json";
 import { recommendRecipes } from "../src/lib/recommender";
 import { buildExplanation, buildReason } from "../src/lib/recommender/build-reason";
 import { normalizeIngredients } from "../src/lib/recommender/normalize-ingredients";
@@ -165,4 +166,17 @@ test("validateIngredients rejects overly vague inputs", () => {
 
 test("validateIngredients accepts specific ingredient lists", () => {
   assert.equal(validateIngredients(["tomato", "onion", "pasta"]), null);
+});
+
+test("manual evaluation scenarios remain intentionally broad and course-sized", () => {
+  assert.equal(Array.isArray(manualQueries), true);
+  assert.equal(manualQueries.length >= 10, true);
+  assert.equal(
+    manualQueries.every(
+      (scenario) =>
+        Array.isArray(scenario.ingredients) &&
+        typeof scenario.notes === "string"
+    ),
+    true
+  );
 });

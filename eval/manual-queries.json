@@ -1,13 +1,92 @@
 [
   {
+    "name": "Pasta pantry overlap",
     "ingredients": ["tomato", "onion", "pasta"],
-    "expected": "A tomato-based pasta recipe should rank near the top.",
-    "notes": ""
+    "expectedTopTitle": "Garlic Tomato Pasta",
+    "expectStrongMatch": true,
+    "expectAtLeastRecipes": 1,
+    "expectedSuggestedIngredients": [],
+    "notes": "A tomato-based pasta recipe should rank at the top."
   },
   {
+    "name": "Fried rice pantry overlap",
     "ingredients": ["egg", "rice", "soy sauce"],
-    "expected": "A fried rice-style recipe should rank near the top.",
-    "notes": ""
+    "expectedTopTitle": "Chicken Fried Rice",
+    "expectStrongMatch": true,
+    "expectAtLeastRecipes": 1,
+    "expectedSuggestedIngredients": [],
+    "notes": "A fried-rice style recipe should surface clearly."
+  },
+  {
+    "name": "Breakfast vegetable overlap",
+    "ingredients": ["egg", "tomato", "bell pepper"],
+    "expectedTopTitle": "Simple Veggie Omelette",
+    "expectStrongMatch": true,
+    "expectAtLeastRecipes": 1,
+    "expectedSuggestedIngredients": [],
+    "notes": "Vegetable omelette should be the best fit."
+  },
+  {
+    "name": "Salad pantry overlap",
+    "ingredients": ["chickpeas", "cucumber", "tomatoes"],
+    "expectedTopTitle": "Chickpea Salad Bowl",
+    "expectStrongMatch": true,
+    "expectAtLeastRecipes": 1,
+    "expectedSuggestedIngredients": [],
+    "notes": "Normalization should map plurals to the salad recipe."
+  },
+  {
+    "name": "Alias-heavy pantry overlap",
+    "ingredients": ["garbanzo beans", "spring onions", "extra virgin olive oil"],
+    "expectedTopTitle": "Chickpea Salad Bowl",
+    "expectStrongMatch": false,
+    "expectAtLeastRecipes": 1,
+    "expectedSuggestedIngredients": ["tomato"],
+    "notes": "Alias handling should still surface the salad as a near match."
+  },
+  {
+    "name": "Partial egg overlap",
+    "ingredients": ["egg", "onion"],
+    "expectedTopTitle": "Simple Veggie Omelette",
+    "expectStrongMatch": false,
+    "expectAtLeastRecipes": 1,
+    "expectedSuggestedIngredients": ["tomato"],
+    "notes": "No strong match should exist, but a useful partial recipe should still be returned."
+  },
+  {
+    "name": "Very weak pantry input",
+    "ingredients": ["banana", "yogurt"],
+    "expectedTopTitle": null,
+    "expectStrongMatch": false,
+    "expectAtLeastRecipes": 0,
+    "expectedSuggestedIngredients": [],
+    "notes": "No filler recipes should be returned."
+  },
+  {
+    "name": "Tomato and aromatics overlap",
+    "ingredients": ["tomato", "garlic", "olive oil"],
+    "expectedTopTitle": "Garlic Tomato Pasta",
+    "expectStrongMatch": true,
+    "expectAtLeastRecipes": 1,
+    "expectedSuggestedIngredients": [],
+    "notes": "The pasta dish currently clears the strong-match threshold with this overlap."
+  },
+  {
+    "name": "Chicken rice overlap",
+    "ingredients": ["chicken breast", "rice", "onion"],
+    "expectedTopTitle": "Chicken Fried Rice",
+    "expectStrongMatch": true,
+    "expectAtLeastRecipes": 1,
+    "expectedSuggestedIngredients": [],
+    "notes": "Chicken fried rice should remain a strong match."
+  },
+  {
+    "name": "Vague invalid input",
+    "ingredients": ["food", "sauce"],
+    "expectedTopTitle": null,
+    "expectStrongMatch": false,
+    "expectAtLeastRecipes": 0,
+    "expectedSuggestedIngredients": [],
+    "notes": "This should be rejected by validation rather than evaluated like a real query."
   }
 ]
-
