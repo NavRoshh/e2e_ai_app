@@ -3,6 +3,7 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import { generateSummary } from "@/lib/llm/generate-summary";
 import { recommendRecipes, type Recipe } from "@/lib/recommender";
+import { validateIngredients } from "@/lib/recommender/validate-ingredients";
 
 type RecommendRequest = {
   ingredients?: unknown;
@@ -30,9 +31,11 @@ export async function POST(request: NextRequest) {
     .map((value) => value.trim().toLowerCase())
     .filter(Boolean);
 
-  if (userIngredients.length < 2) {
+  const validationMessage = validateIngredients(userIngredients);
+
+  if (validationMessage) {
     return NextResponse.json(
-      { message: "Provide at least 2 specific ingredients." },
+      { message: validationMessage },
       { status: 400 }
     );
   }
@@ -46,4 +49,3 @@ export async function POST(request: NextRequest) {
     summary
   });
 }
-

@@ -5,6 +5,7 @@ import { buildExplanation, buildReason } from "../src/lib/recommender/build-reas
 import { normalizeIngredients } from "../src/lib/recommender/normalize-ingredients";
 import { rankRecipes } from "../src/lib/recommender/rank-recipes";
 import { suggestIngredientsToAdd } from "../src/lib/recommender/suggest-ingredients-to-add";
+import { validateIngredients } from "../src/lib/recommender/validate-ingredients";
 import type { Recipe } from "../src/lib/recommender";
 
 const fixtureRecipes: Recipe[] = [
@@ -146,4 +147,22 @@ test("rankRecipes includes structured explanation data for cards", () => {
     coveragePercent: 60,
     matchStrength: "strong"
   });
+});
+
+test("validateIngredients rejects empty input", () => {
+  assert.equal(
+    validateIngredients([]),
+    "Add at least 2 to 3 specific ingredients to get useful recommendations."
+  );
+});
+
+test("validateIngredients rejects overly vague inputs", () => {
+  assert.equal(
+    validateIngredients(["sauce", "food"]),
+    "Try 2 to 3 more specific ingredients like tomato, onion, rice, or chicken."
+  );
+});
+
+test("validateIngredients accepts specific ingredient lists", () => {
+  assert.equal(validateIngredients(["tomato", "onion", "pasta"]), null);
 });

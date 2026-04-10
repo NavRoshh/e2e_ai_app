@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import type { RankedRecipe, RecommendationResponse } from "@/lib/recommender";
+import { validateIngredients } from "@/lib/recommender/validate-ingredients";
 
 const initialState: RecommendationResponse | null = null;
 
@@ -118,20 +119,16 @@ export default function HomePage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<RecommendationResponse | null>(initialState);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const parsedIngredients = parseIngredients(ingredients);
+    setHasSubmitted(true);
 
-    if (parsedIngredients.length === 0) {
-      setError("Add at least 2 to 3 specific ingredients to get useful recommendations.");
-      setResult(null);
-      return;
-    }
-
-    if (parsedIngredients.length < 2) {
-      setError("Use at least 2 specific ingredients for stronger matches.");
-      setResult(null);
+    const validationMessage = validateIngredients(parsedIngredients);
+    if (validationMessage) {
+      setError(validationMessage);
       return;
     }
 
@@ -148,14 +145,23 @@ export default function HomePage() {
       });
 
       if (!response.ok) {
-        throw new Error("Recommendation request failed.");
+        const payload = (await response.json().catch(() => null)) as
+          | { message?: string }
+          | null;
+        throw new Error(
+          payload?.message ?? "Recommendation request failed."
+        );
       }
 
       const data = (await response.json()) as RecommendationResponse;
       setResult(data);
-    } catch {
-      setError("The recommender is unavailable right now. Please try again.");
-      setResult(null);
+    } catch (caughtError) {
+      const message =
+        caughtError instanceof Error
+          ? caughtError.message
+          : "The recommender is unavailable right now. Please try again.";
+
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -228,7 +234,24 @@ export default function HomePage() {
         </form>
 
         {error ? (
-          <p style={{ color: "#a61c1c", marginTop: 18 }}>{error}</p>
+          <p
+            role="alert"
+            style={{ color: "#a61c1c", marginTop: 18 }}
+          >
+            {error}
+          </p>
+        ) : null}
+
+        {!hasSubmitted && !loading && !result ? (
+          <p style={{ color: "var(--muted)", marginTop: 18 }}>
+            Start with ingredients you already have, such as tomato, onion, pasta, egg, or rice.
+          </p>
+        ) : null}
+
+        {loading ? (
+          <p style={{ color: "var(--muted)", marginTop: 18 }}>
+            Checking the processed recipe dataset for the best deterministic matches...
+          </p>
         ) : null}
       </section>
 
