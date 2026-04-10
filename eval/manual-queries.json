@@ -1,0 +1,13 @@
+[
+  {
+    "ingredients": ["tomato", "onion", "pasta"],
+    "expected": "A tomato-based pasta recipe should rank near the top.",
+    "notes": ""
+  },
+  {
+    "ingredients": ["egg", "rice", "soy sauce"],
+    "expected": "A fried rice-style recipe should rank near the top.",
+    "notes": ""
+  }
+]
+

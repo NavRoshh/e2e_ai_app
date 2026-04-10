@@ -1,0 +1,23 @@
+[
+  {
+    "id": "recipe-1",
+    "title": "Garlic Tomato Pasta",
+    "ingredients": ["pasta", "tomato", "garlic", "olive oil", "onion"]
+  },
+  {
+    "id": "recipe-2",
+    "title": "Simple Veggie Omelette",
+    "ingredients": ["egg", "onion", "tomato", "bell pepper", "olive oil"]
+  },
+  {
+    "id": "recipe-3",
+    "title": "Chicken Fried Rice",
+    "ingredients": ["rice", "chicken breast", "soy sauce", "egg", "onion"]
+  },
+  {
+    "id": "recipe-4",
+    "title": "Chickpea Salad Bowl",
+    "ingredients": ["chickpea", "cucumber", "tomato", "olive oil", "lemon juice"]
+  }
+]
+
